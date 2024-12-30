@@ -6,7 +6,7 @@
 /*   By: erbastug <erbastug@student.42kocaeli.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 21:15:30 by erbastug          #+#    #+#             */
-/*   Updated: 2024/12/27 21:15:51 by erbastug         ###   ########.fr       */
+/*   Updated: 2024/12/30 18:26:02 by erbastug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stddef.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 11
 # endif
 
 char	*get_next_line(int fd);

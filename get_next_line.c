@@ -6,7 +6,7 @@
 /*   By: erbastug <erbastug@student.42kocaeli.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 21:05:08 by erbastug          #+#    #+#             */
-/*   Updated: 2024/12/28 19:36:04 by erbastug         ###   ########.fr       */
+/*   Updated: 2024/12/30 18:45:34 by erbastug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ static	char	*read_line(int fd, char *kontrol)
 	return (kontrol);
 }
 
-static char	*ft_update(char *kontrol)
+static char	*update(char *kontrol)
 {
 	char	*str;
-	size_t	i;
-	size_t	j;
+	int		i;
+	int		j;
 
 	i = 0;
 	if (!kontrol)
@@ -56,37 +56,36 @@ static char	*ft_update(char *kontrol)
 	if (!str)
 		return (ft_free(kontrol, NULL));
 	j = 0;
-	while (kontrol[++i])
+	while (kontrol[++i] != '\0')
 		str[j++] = kontrol[i];
 	str[j] = '\0';
 	ft_free(kontrol, NULL);
 	return (str);
 }
 
-static	char	*get_line(char *kontrol)
+static	char	*ft_get_line(char *kontrol)
 {
 	char	*line;
 	int		i;
+	int		j;
 
-	i = 0;
 	if (kontrol[0] == '\0')
 		return (NULL);
+	i = 0;
 	while (kontrol[i] != '\n' && kontrol[i] != '\0')
 		i++;
 	if (kontrol[i] == '\n')
 		i++;
 	line = (char *)malloc((i + 1) * sizeof(char));
 	if (!line)
-		return (NULL);
-	i = 0;
-	while (kontrol[i] != '\n' && kontrol[i] != '\0')
+		return (ft_free(kontrol, NULL));
+	j = 0;
+	while (j < i)
 	{
-		line[i] = kontrol[i];
-		i++;
+		line[j] = kontrol[j];
+		j++;
 	}
-	if (kontrol[i] == '\n')
-		line[i++] = '\n';
-	line[i] = '\0';
+	line[j] = '\0';
 	return (line);
 }
 
@@ -100,13 +99,13 @@ char	*get_next_line(int fd)
 	kontrol = read_line(fd, kontrol);
 	if (!kontrol)
 		return (NULL);
-	str = get_line(kontrol);
+	str = ft_get_line(kontrol);
 	if (!str)
 	{
 		free(kontrol);
 		kontrol = NULL;
 		return (NULL);
 	}
-	kontrol = ft_update(kontrol);
+	kontrol = update(kontrol);
 	return (str);
 }
