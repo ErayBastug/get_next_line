@@ -3,86 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erbastug <erbastug@student.42kocaeli.co    +#+  +:+       +#+        */
+/*   By: erbastug <erbastug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/27 21:05:08 by erbastug          #+#    #+#             */
-/*   Updated: 2024/12/30 18:45:34 by erbastug         ###   ########.fr       */
+/*   Created: 2025/01/01 14:25:29 by erbastug          #+#    #+#             */
+/*   Updated: 2025/01/01 16:58:55 by erbastug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include "get_next_line.h"
+#include <stdlib.h>
 
-static	char	*read_line(int fd, char *kontrol)
+static	char	*ft_read_line(int fd, char *remainder)
 {
-	int		a;
+	ssize_t	a;
 	char	*buff;
 
 	buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buff)
-		return (ft_free(kontrol, NULL));
+		return (ft_free(remainder, NULL));
 	a = 1;
-	while (a > 0 && !find_newline(kontrol))
+	while (a > 0 && !ft_find_newline(remainder))
 	{
 		a = read(fd, buff, BUFFER_SIZE);
 		if (a == -1)
-			return (ft_free(kontrol, buff));
+			return (ft_free(remainder, buff));
 		buff[a] = '\0';
-		kontrol = merge(kontrol, buff);
-		if (!kontrol)
-			return (ft_free(kontrol, buff));
+		remainder = ft_merge(remainder, buff);
+		if (!remainder)
+			return (ft_free(remainder, buff));
 	}
 	ft_free(buff, NULL);
-	return (kontrol);
+	return (remainder);
 }
 
-static char	*update(char *kontrol)
+static char	*ft_update(char *remainder)
 {
 	char	*str;
-	int		i;
-	int		j;
+	ssize_t	i;
+	ssize_t	j;
 
 	i = 0;
-	if (!kontrol)
+	if (!remainder)
 		return (NULL);
-	while (kontrol[i] != '\n' && kontrol[i] != '\0')
+	while (remainder[i] != '\n' && remainder[i] != '\0')
 		i++;
-	if (kontrol[i] == '\0')
-		return (ft_free(kontrol, NULL));
-	str = (char *)malloc((ft_strlen(kontrol) - i) * sizeof(char));
+	if (remainder[i] == '\0')
+		return (ft_free(remainder, NULL));
+	str = (char *)malloc((ft_strlen(remainder) - i) * sizeof(char));
 	if (!str)
-		return (ft_free(kontrol, NULL));
+		return (ft_free(remainder, NULL));
 	j = 0;
-	while (kontrol[++i] != '\0')
-		str[j++] = kontrol[i];
+	while (remainder[++i] != '\0')
+		str[j++] = remainder[i];
 	str[j] = '\0';
-	ft_free(kontrol, NULL);
+	ft_free(remainder, NULL);
 	return (str);
 }
 
-static	char	*ft_get_line(char *kontrol)
+static	char	*ft_get_line(char *remainder)
 {
 	char	*line;
-	int		i;
-	int		j;
+	ssize_t	i;
+	ssize_t	j;
 
-	if (kontrol[0] == '\0')
+	if (remainder[0] == '\0')
 		return (NULL);
 	i = 0;
-	while (kontrol[i] != '\n' && kontrol[i] != '\0')
+	while (remainder[i] != '\n' && remainder[i] != '\0')
 		i++;
-	if (kontrol[i] == '\n')
+	if (remainder[i] == '\n')
 		i++;
 	line = (char *)malloc((i + 1) * sizeof(char));
 	if (!line)
-		return (ft_free(kontrol, NULL));
+		return (ft_free(remainder, NULL));
 	j = 0;
 	while (j < i)
 	{
-		line[j] = kontrol[j];
+		line[j] = remainder[j];
 		j++;
 	}
 	line[j] = '\0';
@@ -91,21 +88,21 @@ static	char	*ft_get_line(char *kontrol)
 
 char	*get_next_line(int fd)
 {
-	static char	*kontrol;
+	static char	*remainder;
 	char		*str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	kontrol = read_line(fd, kontrol);
-	if (!kontrol)
+	remainder = ft_read_line(fd, remainder);
+	if (!remainder)
 		return (NULL);
-	str = ft_get_line(kontrol);
+	str = ft_get_line(remainder);
 	if (!str)
 	{
-		free(kontrol);
-		kontrol = NULL;
+		free(remainder);
+		remainder = NULL;
 		return (NULL);
 	}
-	kontrol = update(kontrol);
+	remainder = ft_update(remainder);
 	return (str);
 }
