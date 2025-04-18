@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erbastug <erbastug@student.42kocaeli.co    +#+  +:+       +#+        */
+/*   By: erbastug <erbastug@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/27 21:16:09 by erbastug          #+#    #+#             */
-/*   Updated: 2024/12/28 19:30:55 by erbastug         ###   ########.fr       */
+/*   Created: 2025/01/01 14:25:12 by erbastug          #+#    #+#             */
+/*   Updated: 2025/01/01 16:54:24 by erbastug         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <unistd.h>
 
 char	*ft_free(char *reads, char *buff)
 {
@@ -21,9 +22,9 @@ char	*ft_free(char *reads, char *buff)
 	return (NULL);
 }
 
-int	ft_strlen(char *str)
+ssize_t	ft_strlen(char *str)
 {
-	int	length;
+	ssize_t	length;
 
 	length = 0;
 	if (!str)
@@ -33,7 +34,7 @@ int	ft_strlen(char *str)
 	return (length);
 }
 
-char	*find_newline(char *str)
+char	*ft_find_newline(char *str)
 {
 	if (!str)
 		return (NULL);
@@ -46,26 +47,26 @@ char	*find_newline(char *str)
 	return (NULL);
 }
 
-char	*merge(char *kontrol, char *buff)
+char	*ft_merge(char *reminder, char *buff)
 {
 	char		*result;
-	int			i;
-	int			j;
-	int			len1;
-	int			len2;
+	ssize_t		i;
+	ssize_t		j;
+	ssize_t		len1;
+	ssize_t		len2;
 
-	len1 = ft_strlen(kontrol);
+	len1 = ft_strlen(reminder);
 	len2 = ft_strlen(buff);
 	result = (char *)malloc(len1 + len2 + 1);
 	if (!result)
-		return (ft_free(kontrol, NULL));
+		return (ft_free(reminder, NULL));
 	i = -1;
 	while (++i < len1)
-		result[i] = kontrol[i];
+		result[i] = reminder[i];
 	j = -1;
 	while (++j < len2)
 		result[i++] = buff[j];
 	result[i] = '\0';
-	free(kontrol);
+	free(reminder);
 	return (result);
 }
